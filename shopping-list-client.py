@@ -7,6 +7,13 @@
 from socket import *
 import json
 
+# Create variable for shopping list file name
+shopping_list_json_file = './shopping-list.json'
+
+# Load in json file and convert to string
+with open(shopping_list_json_file, 'r') as f:
+  json_str = f.read()
+
 # Setup server info
 serverName, serverPort = '127.0.0.1', 5005
 
@@ -16,6 +23,5 @@ clientSocket.connect((serverName, serverPort))
 
 # Send message to server
 print('Sending-------------------------------------------------')
-req = 10000000 * 'a'
-clientSocket.sendall(req.encode())
+clientSocket.sendall(json_str.encode())
 clientSocket.close()

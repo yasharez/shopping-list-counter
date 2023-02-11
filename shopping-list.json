@@ -1,48 +1,48 @@
 {
-    "shopping lists": [
+  "shopping lists": [
+    {
+      "name": "My Shopping List",
+      "items": [
         {
-            "name": "My Shopping List",
-            "items": [
-                {
-                    "item": "ice cream",
-                    "category": "groceries",
-                    "store": "Foodland",
-                    "purchased": "no"
-                },
-                {
-                    "item": "paper towel",
-                    "category": "home goods",
-                    "store": "Costco",
-                    "purchased": "yes"
-                }
-            ]
+          "item": "ice cream",
+          "category": "groceries",
+          "store": "Foodland",
+          "purchased": "no"
         },
         {
-            "name": "BBQ",
-            "items": [
-                {
-                    "item": "hamburgers",
-                    "category": "groceries",
-                    "store": "Costco",
-                    "purchased": "yes"
-                },
-                {
-                    "item": "buns",
-                    "category": "groceries",
-                    "store": "Target",
-                    "purchased": "no"
-                },
-                {
-                    "item": "chips",
-                    "category": "groceries",
-                    "store": "Costco",
-                    "purchased": "no"
-                }
-            ]
-        },
-        {
-            "name": "Test List",
-            "items": null
+          "item": "paper towel",
+          "category": "home goods",
+          "store": "Costco",
+          "purchased": "yes"
         }
-    ]
+      ]
+    },
+    {
+      "name": "BBQ",
+      "items": [
+        {
+          "item": "hamburgers",
+          "category": "groceries",
+          "store": "Costco",
+          "purchased": "yes"
+        },
+        {
+          "item": "buns",
+          "category": "groceries",
+          "store": "Target",
+          "purchased": "no"
+        },
+        {
+          "item": "chips",
+          "category": "groceries",
+          "store": "Costco",
+          "purchased": "no"
+        }
+      ]
+    },
+    {
+      "name": "Test List",
+      "items": null
+    }
+  ]
 }
