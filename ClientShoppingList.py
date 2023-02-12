@@ -7,21 +7,33 @@
 from socket import *
 import json
 
-# Create variable for shopping list file name
-shopping_list_json_file = './shopping-list.json'
+class ClientShoppingList():
 
-# Load in json file and convert to string
-with open(shopping_list_json_file, 'r') as f:
-  json_str = f.read()
+  def __init__(self, client_name, client_port, json_list_fp='./shopping-list.json'):
+    """
+    Initialize client server with user input port & name, load in json list filepath
+    """
+    self._client_name = client_name
+    self._client_port = client_port
+    self._json_list_fp = json_list_fp
 
-# Setup server info
-serverName, serverPort = '127.0.0.1', 5005
+    json_str = self.load_json_str()
 
-# Create and bind socket for client
-clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))
+    # Create and bind socket for client
+    clientSocket = socket(AF_INET, SOCK_STREAM)
+    clientSocket.connect((self._client_name, self._client_port))
 
-# Send message to server
-print('Sending-------------------------------------------------')
-clientSocket.sendall(json_str.encode())
-clientSocket.close()
+    # Send message to server
+    print('Sending-------------------------------------------------')
+    clientSocket.sendall(json_str.encode())
+    clientSocket.close()
+
+  def load_json_str(self):
+    """Load json object into string from filepath"""
+
+    with open(self._json_list_fp, 'r') as f:
+      return f.read()
+
+
+if __name__ == '__main__':
+  client = ClientShoppingList('127.0.0.1', 5005)

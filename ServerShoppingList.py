@@ -19,15 +19,18 @@ class ServerShoppingList:
 
     self._server_name = server_name
     self._server_port = server_port
+    self.start_server()
 
-    # Setup server info
-    serverName, serverPort = '127.0.0.1', 5005
+  def start_server(self):
+    """
+    Start server to listen for incoming shopping lists
+    """
 
     # Create and bind socket for server
     serverSocket = socket(AF_INET, SOCK_STREAM)
     serverSocket.bind((self._server_name, self._server_port))
     serverSocket.listen(1)
-    print(f'Server listening on port {serverPort}...')
+    print(f'Server listening on port {self._server_port}...')
 
     # Start loop for server
     while True:
