@@ -5,8 +5,7 @@
 
 # Import libraries
 from socket import *
-import json
-import ListCounter
+from ListCounter import *
 
 # Setup server info
 serverName, serverPort = '127.0.0.1', 5005
@@ -31,10 +30,8 @@ while True:
     req += additional_req
     req_len = len(additional_req)
 
-  
+  list_counter = ListCounter(req.decode())
+  print(list_counter.count_lists())
 
-  print(type(req.decode()))
-  print(type(json.loads(req.decode())))
-  print(type(json.dumps(req.decode())))
   connectionSocket.close()
 

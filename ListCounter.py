@@ -35,6 +35,10 @@ class ListCounter:
 
     # Iterate through each sublist and count up the items
     for sublist in self._json_obj['shopping lists']:
-      counts[sublist['name']] = len(sublist['items']) - 1
+      if sublist['items'] is not None:
+        counts[sublist['name']] = len(sublist['items']) - 1
+      else:
+        counts[sublist['name']] = 0
     
     return counts
+
