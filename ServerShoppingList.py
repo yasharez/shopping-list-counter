@@ -7,31 +7,46 @@
 from socket import *
 from ListCounter import *
 
-# Setup server info
-serverName, serverPort = '127.0.0.1', 5005
+class ServerShoppingList:
+  """
+  Shopping list server class for microservice
+  """
 
-# Create and bind socket for server
-serverSocket = socket(AF_INET, SOCK_STREAM)
-serverSocket.bind((serverName, serverPort))
-serverSocket.listen(1)
-print(f'Server listening on port {serverPort}...')
+  def __init__(self, server_name, server_port):
+    """
+    Initialize server with inputted server name and port values
+    """
 
-# Start loop for server
-while True:
+    self._server_name = server_name
+    self._server_port = server_port
 
-  # Receive request from client
-  connectionSocket, addr = serverSocket.accept()
-  req = connectionSocket.recv(1024)
-  req_len = len(req)
+    # Setup server info
+    serverName, serverPort = '127.0.0.1', 5005
 
-  # Continue receiving information if data is large
-  while req_len > 0:
-    additional_req = connectionSocket.recv(1024)
-    req += additional_req
-    req_len = len(additional_req)
+    # Create and bind socket for server
+    serverSocket = socket(AF_INET, SOCK_STREAM)
+    serverSocket.bind((self._server_name, self._server_port))
+    serverSocket.listen(1)
+    print(f'Server listening on port {serverPort}...')
 
-  list_counter = ListCounter(req.decode())
-  print(list_counter.count_lists())
+    # Start loop for server
+    while True:
 
-  connectionSocket.close()
+      # Receive request from client
+      connectionSocket, addr = serverSocket.accept()
+      req = connectionSocket.recv(1024)
+      req_len = len(req)
 
+      # Continue receiving information if data is large
+      while req_len > 0:
+        additional_req = connectionSocket.recv(1024)
+        req += additional_req
+        req_len = len(additional_req)
+
+      list_counter = ListCounter(req.decode())
+      print(list_counter.count_lists())
+
+      connectionSocket.close()
+
+if __name__ == '__main__':
+  server = ServerShoppingList('127.0.0.1', 5005)
