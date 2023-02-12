@@ -13,10 +13,15 @@ class ClientShoppingList():
     """
     Initialize client server with user input port & name, load in json list filepath
     """
+
     self._client_name = client_name
     self._client_port = client_port
     self._json_list_fp = json_list_fp
 
+  def start_client(self):
+    """
+    Start client to send shopping list to server
+    """
     json_str = self.load_json_str()
 
     # Create and bind socket for client
