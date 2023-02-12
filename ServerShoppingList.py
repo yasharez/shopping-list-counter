@@ -47,6 +47,8 @@ class ServerShoppingList:
         req_len = len(additional_req)
 
       list_counter = ListCounter(req.decode())
+
+      connectionSocket.send(list_counter.count_lists().encode())
       print(list_counter.count_lists())
 
       connectionSocket.close()
