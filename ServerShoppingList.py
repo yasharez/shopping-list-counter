@@ -1,6 +1,6 @@
 # Yashar Zafari
 # CS 361 - Software Engineering I
-# 02/11/2023
+# 02/12/2023
 # Server file for shopping list counter microservice
 
 # Import libraries
@@ -54,13 +54,25 @@ class ServerShoppingList:
       list_counter = ListCounter(req.decode())
       self._counts_json = list_counter.count_lists()
       print('looping')
-      # connectionSocket.send(json.dumps(self._counts_json).encode())
+      self.send_counts_to_client()
       connectionSocket.close()
 
   def send_counts_to_client(self):
     """
     Send counts JSON to client
     """
+
+    # Convert JSON to string
+    counts_str = json.dumps(self._counts_json)
+
+    # Create and bind socket to client
+    clientSocket = socket(AF_INET, SOCK_STREAM)
+    clientSocket.connect((self._client_name, self._client_port))
+
+    # Send counts to client
+    print('Sending counts to client-----------')
+    clientSocket.sendall(counts_str.encode())
+    clientSocket.close()
 
 if __name__ == '__main__':
   server = ServerShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050)
