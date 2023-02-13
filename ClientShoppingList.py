@@ -12,7 +12,8 @@ class ClientShoppingList():
   Shopping list server class for microservice
   """
 
-  def __init__(self, server_name, server_port, client_name, client_port, json_list_fp='./shopping-list.json'):
+  def __init__(self, server_name, server_port, client_name, client_port, 
+                  count_file_name='counts', json_list_fp='./shopping-list.json'):
     """
     Initialize client server with user input port & name, load in json list filepath
     """
@@ -22,51 +23,53 @@ class ClientShoppingList():
     self._client_name = client_name
     self._client_port = client_port
     self._json_list_fp = json_list_fp
-    self.send_json_to_server()
+    self._count_file_name = count_file_name + '.json'
+    self.start_client()
 
-  def send_json_to_server(self):
+  def start_client(self):
     """
     Start client to send shopping list to server
     """
+
+    # Load json as string from file
     json_str = self.get_json_str()
 
-    # Create and bind socket for client
+    # Create socket for client and connect to server
     clientSocket = socket(AF_INET, SOCK_STREAM)
     clientSocket.connect((self._server_name, self._server_port))
 
-    # Send message to server
+    # Send shopping list to server
     print(f'Sending shopping list file saved at {self._json_list_fp} to counter microservice\n')
     clientSocket.sendall(json_str.encode())
     clientSocket.close()
-    self.start_client_server()
 
-  def start_client_server(self):
-    """
-    Create client server to listen for incoming data
-    """
-
-    # Create and bind socket for server
-    clientServerSocket = socket(AF_INET, SOCK_STREAM)
-    clientServerSocket.bind((self._client_name, self._client_port))
-    clientServerSocket.listen(1)
+    # Create a socket and bind to for client side server
+    clientSocket = socket(AF_INET, SOCK_STREAM)
+    clientSocket.bind((self._client_name, self._client_port))
+    clientSocket.listen(1)
     print(f'Client side server listening on port {self._client_port}...\n')
 
-    # Start loop for client side server
-    while True:
+    # Receive response from server
+    connectionSocket, addr = clientSocket.accept()
+    res = connectionSocket.recv(1024)
+    res_len = len(res)
 
-      # Receive response from server
-      connectionSocket, addr = clientServerSocket.accept()
-      res = connectionSocket.recv(1024)
-      res_len = len(res)
+    # Continue receiving information if data is large
+    while res_len > 0:
+      additional_res = connectionSocket.recv(1024)
+      res += additional_res
+      res_len = len(additional_res)
 
-      # Continue receiving information if data is large
-      while res_len > 0:
-        additional_res = connectionSocket.recv(1024)
-        res += additional_res
-        res_len = len(additional_res)
-      
-      print('Received shopping list counts from server...\nSaving counts to JSON file "counts.json"')
-      self.save_counts_file(res.decode())
+    clientSocket.close()
+    
+    # Notify user that counts have been received and save to file
+    print(f'Received shopping list counts from server...\nSaving counts to JSON file "{self._count_file_name}"')
+    self.save_counts_file(res.decode())
+
+  def set_count_file_name(self, new_name):
+    """Set method for changing counts file name"""
+
+    self._count_file_name = new_name + '.json'
 
   def get_json_str(self):
     """Load json object into string from filepath"""
@@ -77,9 +80,9 @@ class ClientShoppingList():
   def save_counts_file(self, json_str):
     """Save a new JSON file with shopping list counts"""
 
-    with open('counts.json', 'w') as f:
+    with open(self._count_file_name, 'w') as f:
       json.dump(json.loads(json_str), f)
 
 
 if __name__ == '__main__':
-  client = ClientShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050)
+  client = ClientShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050, 'counts')

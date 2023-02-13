@@ -69,7 +69,7 @@ class ServerShoppingList:
     clientSocket.connect((self._client_name, self._client_port))
 
     # Send counts to client
-    print('Sending shopping list counts to client...')
+    print('Sending shopping list counts to client...\n')
     clientSocket.sendall(counts_str.encode())
     clientSocket.close()
 
