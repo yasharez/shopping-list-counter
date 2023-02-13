@@ -6,19 +6,23 @@
 # Import libraries
 from socket import *
 from ListCounter import *
+import json
 
 class ServerShoppingList:
   """
   Shopping list server class for microservice
   """
 
-  def __init__(self, server_name, server_port):
+  def __init__(self, server_name, server_port, client_name, client_port):
     """
     Initialize server with inputted server name and port values
     """
 
     self._server_name = server_name
     self._server_port = server_port
+    self._client_name = client_name
+    self._client_port = client_port
+    self._counts_json = {}
     self.start_server()
 
   def start_server(self):
@@ -46,12 +50,17 @@ class ServerShoppingList:
         req += additional_req
         req_len = len(additional_req)
 
+      # Create ListCount object to count items in json list
       list_counter = ListCounter(req.decode())
-
-      connectionSocket.send(list_counter.count_lists().encode())
-      print(list_counter.count_lists())
-
+      self._counts_json = list_counter.count_lists()
+      print('looping')
+      # connectionSocket.send(json.dumps(self._counts_json).encode())
       connectionSocket.close()
 
+  def send_counts_to_client(self):
+    """
+    Send counts JSON to client
+    """
+
 if __name__ == '__main__':
-  server = ServerShoppingList('127.0.0.1', 5005)
+  server = ServerShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050)

@@ -12,17 +12,19 @@ class ClientShoppingList():
   Shopping list server class for microservice
   """
 
-  def __init__(self, client_name, client_port, json_list_fp='./shopping-list.json'):
+  def __init__(self, server_name, server_port, client_name, client_port, json_list_fp='./shopping-list.json'):
     """
     Initialize client server with user input port & name, load in json list filepath
     """
 
+    self._server_name = server_name
+    self._server_port = server_port
     self._client_name = client_name
     self._client_port = client_port
     self._json_list_fp = json_list_fp
-    self.start_client()
+    self.send_json_to_server()
 
-  def start_client(self):
+  def send_json_to_server(self):
     """
     Start client to send shopping list to server
     """
@@ -30,20 +32,13 @@ class ClientShoppingList():
 
     # Create and bind socket for client
     clientSocket = socket(AF_INET, SOCK_STREAM)
-    clientSocket.connect((self._client_name, self._client_port))
+    clientSocket.connect((self._server_name, self._server_port))
 
     # Send message to server
     print('Sending-------------------------------------------------')
     clientSocket.sendall(json_str.encode())
-
-    res = clientSocket.recv(1024)
-    print(f'Received counts:\n{res.decode()}')
-
-
-
     clientSocket.close()
-    
-    #self.start_client_server()
+    self.start_client_server()
 
   def start_client_server(self):
     """
@@ -56,6 +51,7 @@ class ClientShoppingList():
     clientServerSocket.listen(1)
     print(f'Client side server listening on port {self._client_port}...')
 
+    # Start loop for client side server
     while True:
 
       # Receive response from server
@@ -79,4 +75,4 @@ class ClientShoppingList():
 
 
 if __name__ == '__main__':
-  client = ClientShoppingList('127.0.0.1', 5005)
+  client = ClientShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050)
