@@ -34,7 +34,7 @@ class ServerShoppingList:
     serverSocket = socket(AF_INET, SOCK_STREAM)
     serverSocket.bind((self._server_name, self._server_port))
     serverSocket.listen(1)
-    print(f'Server listening on port {self._server_port}...')
+    print(f'Server listening on port {self._server_port}...\n')
 
     # Start loop for server
     while True:
@@ -53,7 +53,6 @@ class ServerShoppingList:
       # Create ListCount object to count items in json list
       list_counter = ListCounter(req.decode())
       self._counts_json = list_counter.count_lists()
-      print('looping')
       self.send_counts_to_client()
       connectionSocket.close()
 
@@ -70,7 +69,7 @@ class ServerShoppingList:
     clientSocket.connect((self._client_name, self._client_port))
 
     # Send counts to client
-    print('Sending counts to client-----------')
+    print('Sending shopping list counts to client...')
     clientSocket.sendall(counts_str.encode())
     clientSocket.close()
 

@@ -35,7 +35,7 @@ class ClientShoppingList():
     clientSocket.connect((self._server_name, self._server_port))
 
     # Send message to server
-    print('Sending-------------------------------------------------')
+    print(f'Sending shopping list file saved at {self._json_list_fp} to counter microservice\n')
     clientSocket.sendall(json_str.encode())
     clientSocket.close()
     self.start_client_server()
@@ -49,7 +49,7 @@ class ClientShoppingList():
     clientServerSocket = socket(AF_INET, SOCK_STREAM)
     clientServerSocket.bind((self._client_name, self._client_port))
     clientServerSocket.listen(1)
-    print(f'Client side server listening on port {self._client_port}...')
+    print(f'Client side server listening on port {self._client_port}...\n')
 
     # Start loop for client side server
     while True:
@@ -65,13 +65,20 @@ class ClientShoppingList():
         res += additional_res
         res_len = len(additional_res)
       
-      print(f'Received counts:\n{res.decode()}')
+      print('Received shopping list counts from server...\nSaving counts to JSON file "counts.json"')
+      self.save_counts_file(res.decode())
 
   def get_json_str(self):
     """Load json object into string from filepath"""
 
     with open(self._json_list_fp, 'r') as f:
       return f.read()
+
+  def save_counts_file(self, json_str):
+    """Save a new JSON file with shopping list counts"""
+
+    with open('counts.json', 'w') as f:
+      json.dump(json.loads(json_str), f)
 
 
 if __name__ == '__main__':
