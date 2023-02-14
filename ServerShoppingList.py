@@ -73,5 +73,6 @@ class ServerShoppingList:
     clientSocket.sendall(counts_str.encode())
     clientSocket.close()
 
+
 if __name__ == '__main__':
   server = ServerShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050)
