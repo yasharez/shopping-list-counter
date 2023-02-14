@@ -24,7 +24,7 @@ class ClientShoppingList():
     self._client_port = client_port
     self._json_list_fp = json_list_fp
     self._count_file_name = count_file_name + '.json'
-    self.start_client()
+    # self.start_client()
 
   def start_client(self):
     """
@@ -63,13 +63,18 @@ class ClientShoppingList():
     clientSocket.close()
     
     # Notify user that counts have been received and save to file
-    print(f'Received shopping list counts from server...\nSaving counts to JSON file "{self._count_file_name}"')
+    print(f'Received shopping list counts from server...\nSaving counts to JSON file "{self._count_file_name}"\n')
     self.save_counts_file(res.decode())
 
   def set_count_file_name(self, new_name):
     """Set method for changing counts file name"""
 
     self._count_file_name = new_name + '.json'
+
+  def set_filepath(self, new_fp):
+    """Set method to update list file path"""
+
+    self._json_list_fp = new_fp
 
   def get_json_str(self):
     """Load json object into string from filepath"""
@@ -86,3 +91,4 @@ class ClientShoppingList():
 
 if __name__ == '__main__':
   client = ClientShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050, 'counts')
+  client.start_client()
