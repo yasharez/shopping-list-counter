@@ -90,7 +90,6 @@ class ClientShoppingList():
 
 
 if __name__ == '__main__':
-  client = ClientShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050, 'counts')
+  client = ClientShoppingList('127.0.0.1', 5005, '127.0.0.1', 5050, 'counts-test')
   client.start_client()
 
-  
